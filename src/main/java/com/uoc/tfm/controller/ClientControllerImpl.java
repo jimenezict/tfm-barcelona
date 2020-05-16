@@ -20,8 +20,15 @@ public class ClientControllerImpl implements ClientController {
     @Override
     public StationsLocation getStationsLocation() {
         log.info("Starting station collections: {}", clientService.getServiceName());
-        StationsLocation stationsLocation = clientService.getStationsLocation();
-        log.info("Ending station collections: {} with {} registers",
+        StationsLocation stationsLocation = new StationsLocation();
+
+        try {
+            stationsLocation = clientService.getStationsLocation();
+        } catch(Exception e) {
+            log.error("Fail on Location status collection {} due to: ", clientService.getServiceName(), e);
+            return stationsLocation;
+        }
+            log.info("Ending station collections: {} with {} registers",
                 clientService.getServiceName(),
                 stationsLocation.getStationLocationList().size());
         return stationsLocation;
@@ -32,7 +39,14 @@ public class ClientControllerImpl implements ClientController {
     @GetMapping("/status")
     public StationsStatus getStationStatus() {
         log.info("Starting station status collections: {}", clientService.getServiceName());
-        StationsStatus stationStatus = clientService.getStationStatus();
+        StationsStatus stationStatus = new StationsStatus();
+
+        try {
+            stationStatus = clientService.getStationStatus();
+        } catch(Exception e) {
+            log.error("Fail on station status collection {} due to: ", clientService.getServiceName(), e);
+            return stationStatus;
+        }
         log.info("Ending station status collections: {} with {} registers",
                 clientService.getServiceName(),
                 stationStatus.getStationStatusList().size());
